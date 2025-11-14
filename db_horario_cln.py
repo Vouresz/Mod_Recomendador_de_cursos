@@ -1,18 +1,8 @@
-# -*- coding: utf-8 -*-
-"""
-Script: Procesamiento y convalidación de horarios L3 desde PDF
-Entrada:  PDF con horarios (ej. HORARIO 23-2_merged.pdf)
-Salida:   horarios_L3_convalidado.csv
-Requisitos: pip install pdfplumber pandas openpyxl
-"""
 
 import pdfplumber
 import pandas as pd
 import re
 
-# -----------------------------------------------------------
-# 1. TABLA DE EQUIVALENCIAS (Antiguo → Nuevo)
-# -----------------------------------------------------------
 equivalencias = [
     ("EE250","Dibujo Técnico","CBS01","Fundamentos de Programación"),
     ("EE152","Fund. Ing. Computador","CBS02","Sistemas Operativos I"),
@@ -51,9 +41,7 @@ df_equiv = pd.DataFrame(equivalencias,
     columns=["cod_ant","nom_ant","cod_nuevo","nom_nuevo"]
 )
 
-# -----------------------------------------------------------
-# 2. MALLA COMPLETA L3 (Códigos)
-# -----------------------------------------------------------
+
 malla_L3 = [
     # 1ro a 10mo ciclo + Electivos
     "BAE01","BFI01","BIC01","BMA01","BMA03","BRN01","CBS01",
@@ -73,9 +61,6 @@ malla_L3 = [
     "TLR06","EE586","EE593","TLR07","EE596","EE598","EE608","TLN07"
 ]
 
-# -----------------------------------------------------------
-# 3. FUNCIONES DE PROCESAMIENTO
-# -----------------------------------------------------------
 def extraer_tablas_pdf(pdf_file):
     """Extrae tablas del PDF usando pdfplumber."""
     filas = []
@@ -92,67 +77,67 @@ def limpiar_filas_brutas(filas):
     """Convierte texto bruto del PDF a DataFrame estructurado."""
     registros = []
 
-    # patrones útiles
+    
     codigo_pat = re.compile(r"\b[A-Z]{1,4}\d{2,3}\b")
     hora_pat = re.compile(r"(\d{1,2}:\d{2})(?:\s*-\s*(\d{1,2}:\d{2}))?")
 
     for f in filas:
-        # normalizar a lista de strings y eliminar vacíos
+        
         clean = [str(x).strip() for x in f if x is not None and str(x).strip() != ""]
         if not clean:
             continue
 
-        # buscar índice del código (primera ocurrencia que parezca código)
+       
         idx_codigo = None
         for i, v in enumerate(clean):
             if codigo_pat.search(v):
                 idx_codigo = i
                 break
 
-        # Si no encontramos código, intentar usar el segundo elemento (fallback)
+    
         if idx_codigo is None and len(clean) > 1:
             idx_codigo = 1
         elif idx_codigo is None:
             idx_codigo = 0
 
-        # asignaciones por posición relativa al código
+       
         sigla = clean[0] if len(clean) > 0 and idx_codigo != 0 else ""
         codigo = clean[idx_codigo] if idx_codigo < len(clean) else ""
 
-        # sección suele estar justo después del código
+      
         seccion = clean[idx_codigo + 1] if idx_codigo + 1 < len(clean) else ""
 
-        # buscar horas (índices)
+      
         idx_hora = None
         for i, v in enumerate(clean):
             if hora_pat.search(v):
                 idx_hora = i
                 break
 
-        # construir nombre del curso: desde después de la sección hasta antes de la hora o docente
+      
         start_name = idx_codigo + 2
         end_name = idx_hora if idx_hora is not None else min(len(clean), start_name + 2)
         curso_nombre = ""
         if start_name < len(clean):
             curso_nombre = " ".join(clean[start_name:end_name]).strip()
 
-        # docente: intentar el elemento antes de tipo/aula/horas
+  
         posible_doc_idx = end_name
         docente = ""
         if posible_doc_idx < len(clean):
-            # si el candidato contiene coma (Formato APELLIDO, NOMBRE) o varias palabras, tomarlo
+       
             cand = clean[posible_doc_idx]
             if "," in cand or (len(cand.split()) >= 2 and not codigo_pat.search(cand)):
                 docente = cand
                 posible_doc_idx += 1
 
-        # resto: tipo, aula, ciclo, dia
+  
         tipo = clean[posible_doc_idx] if posible_doc_idx < len(clean) else ""
         aula = clean[posible_doc_idx + 1] if posible_doc_idx + 1 < len(clean) else ""
         ciclo = clean[posible_doc_idx + 2] if posible_doc_idx + 2 < len(clean) else ""
         dia = clean[posible_doc_idx + 3] if posible_doc_idx + 3 < len(clean) else ""
 
-        # horas
+   
         hora_ini = ""
         hora_fin = ""
         if idx_hora is not None:
@@ -191,9 +176,6 @@ def aplicar_convalidaciones(df):
     return df
 
 
-# -----------------------------------------------------------
-# 4. PROCESAR PDF
-# -----------------------------------------------------------
 PDF_INPUT = "HORARIO 23-2.pdf"
 
 print("Extrayendo tablas del PDF...")
@@ -208,18 +190,15 @@ df = aplicar_convalidaciones(df)
 print("Filtrando solo cursos L3...")
 df_L3 = df[df["codigo_nuevo"].isin(malla_L3)].copy()
 
-# -----------------------------------------------------------
-# 5. EXPORTAR CSV FINAL
-# -----------------------------------------------------------
+
 OUTPUT_CSV = "horarios_L3_convalidado.csv"
-# Asegurar columnas en orden esperado (evita columnas vacías desalineadas)
+
 expected_cols = [
     "sigla","codigo_original","seccion","curso_original","docente",
     "tipo","aula","ciclo","dia","hora_inicio","hora_fin",
     "codigo_nuevo","curso_nuevo"
 ]
 
-# crear columnas faltantes si no existen
 for c in expected_cols:
     if c not in df_L3.columns:
         df_L3[c] = ""
