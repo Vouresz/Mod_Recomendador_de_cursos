@@ -1,0 +1,64 @@
+course_id,course_name,linea_carrera,ciclo,prerequisitos,nota
+MAT101,Cálculo 1,Telecomunicaciones,1,"{}",11
+MAT102,Cálculo 2,Telecomunicaciones,2,"{MAT101}",12
+MAT201,Cálculo 3,Telecomunicaciones,3,"{MAT102}",13
+MAT202,Álgebra Lineal,Telecomunicaciones,2,"{}",11
+MAT301,Ecuaciones Diferenciales,Telecomunicaciones,4,"{MAT102}",14
+MAT401,Métodos Numéricos,Telecomunicaciones,5,"{MAT201, MAT301}",15
+
+FIS101,Física 1,Telecomunicaciones,1,"{}",10
+FIS102,Física 2,Telecomunicaciones,2,"{FIS101}",12
+FIS201,Física 3,Telecomunicaciones,3,"{FIS102}",13
+FIS202,Onda y Calor,Telecomunicaciones,3,"{FIS102}",12
+
+TEL101,Introducción a Telecom,Telecomunicaciones,1,"{}",13
+TEL102,Sistemas de Telecomunicaciones,Telecomunicaciones,2,"{TEL101}",14
+TEL201,Comunicaciones 1,Telecomunicaciones,3,"{TEL102, FIS102}",13
+TEL202,Antenas y Propagación,Telecomunicaciones,4,"{TEL201}",14
+TEL301,Comunicaciones 2,Telecomunicaciones,4,"{TEL201}",15
+TEL302,Teoría de Señales,Telecomunicaciones,4,"{TEL201}",14
+TEL401,Microondas,Telecomunicaciones,5,"{TEL202}",16
+TEL402,Redes Móviles,Telecomunicaciones,5,"{TEL301}",15
+TEL403,Satélites,Telecomunicaciones,6,"{TEL301, TEL302}",17
+
+RED101,Redes 1,Telecomunicaciones,3,"{PROG101}",12
+RED102,Redes 2,Telecomunicaciones,4,"{RED101}",13
+RED201,Seguridad de Redes,Telecomunicaciones,5,"{RED102}",14
+RED202,Protocolos Avanzados,Telecomunicaciones,6,"{RED102}",15
+
+ELEC101,Electrónica 1,Electrónica,1,"{}",11
+ELEC102,Electrónica 2,Electrónica,2,"{ELEC101}",12
+ELEC201,Electrónica 3,Electrónica,3,"{ELEC102}",13
+ELEC202,Circuitos Digitales,Electrónica,3,"{}",12
+ELEC301,Microcontroladores,Electrónica,4,"{ELEC202}",14
+ELEC302,Potencia 1,Electrónica,4,"{ELEC201}",13
+ELEC401,Potencia 2,Electrónica,5,"{ELEC302}",14
+ELEC402,Sistemas Embebidos,Electrónica,5,"{ELEC301}",15
+ELEC403,Instrumentación Electrónica,Electrónica,6,"{ELEC201}",16
+
+PROG101,Programación 1,Computación,1,"{}",13
+PROG102,Programación 2,Computación,2,"{PROG101}",14
+PROG201,Estructuras de Datos,Computación,3,"{PROG102}",13
+PROG202,Arquitectura de Computadores,Computación,3,"{}",12
+PROG301,Algoritmos Avanzados,Computación,4,"{PROG201}",14
+PROG302,Inteligencia Artificial,Computación,4,"{PROG201}",15
+PROG401,Machine Learning,Computación,5,"{PROG302}",16
+PROG402,Redes Neuronales,Computación,5,"{PROG401}",16
+PROG403,Deep Learning,Computación,6,"{PROG402}",17
+
+SOFT101,Introducción al Software,Computación,1,"{}",12
+SOFT201,Ingeniería de Software,Computación,3,"{SOFT101}",13
+SOFT202,Bases de Datos,Computación,3,"{}",12
+SOFT301,Testing de Software,Computación,4,"{SOFT201}",14
+SOFT302,Desarrollo Web,Computación,4,"{SOFT201}",13
+SOFT401,Arquitectura de Software,Computación,5,"{SOFT301, SOFT201}",15
+SOFT402,DevOps,Computación,5,"{SOFT302}",15
+SOFT403,Software en la Nube,Computación,6,"{SOFT402}",16
+
+IND101,Introducción a Industria,Industrial,1,"{}",11
+IND102,Procesos Industriales,Industrial,2,"{}",12
+IND201,Investigación Operativa 1,Industrial,3,"{MAT202}",12
+IND202,Investigación Operativa 2,Industrial,4,"{IND201}",13
+IND301,Sistemas Industriales,Industrial,5,"{IND202}",14
+IND302,Gestión de Proyectos,Industrial,5,"{}",13
+IND401,Optimización Avanzada,Industrial,6,"{IND202}",15
